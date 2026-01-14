@@ -110,7 +110,7 @@
                     <thead class="bg-orange-500 text-white">
                         <tr>
                             <th>Matricule</th>
-                            <th>Matricule</th>
+                            <th>Email</th>
                             <th>classe</th>
                             <th class="py-4 px-4 text-center font-bold">Statut</th>
                             <th class="py-4 px-4 text-center font-bold">Actions</th>
