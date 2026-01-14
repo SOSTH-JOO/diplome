@@ -11,7 +11,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\Auditeur;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Storage;
+use Illuminate\Support\Facades\Storage;
 class ProfilController extends Controller
 {
     /* ================= AUDITEUR ================= */
@@ -73,7 +73,6 @@ public function update(Request $request)
         'photo' => 'nullable|image|max:2048', // max 2 Mo
     ]);
 
-    // Ajouter le champ is_open = true
     $data['is_open'] = 1;
 
     if ($request->hasFile('photo')) {
@@ -85,11 +84,19 @@ public function update(Request $request)
         // Récupérer le fichier
         $file = $request->file('photo');
 
-        // Générer un nom unique basé sur auditeur_id
+        // Créer le dossier correspondant à la classe si nécessaire
+        $classeName = $auditeur->classe?->nom ?? 'sans_classe';
+        $directory = 'auditeurs/' . $classeName;
+
+        if (!Storage::disk('public')->exists($directory)) {
+            Storage::disk('public')->makeDirectory($directory);
+        }
+
+        // Générer un nom unique
         $filename = $auditeur->auditeur_id . '_' . time() . '.' . $file->getClientOriginalExtension();
 
-        // Stocker le fichier avec le nom personnalisé
-        $path = $file->storeAs('auditeurs', $filename, 'public');
+        // Stocker le fichier dans le dossier spécifique
+        $path = $file->storeAs($directory, $filename, 'public');
 
         // Sauvegarder le chemin dans les données
         $data['photo'] = $path;
@@ -99,6 +106,7 @@ public function update(Request $request)
 
     return redirect()->route('auditeur.index')->with('success', 'Profil mis à jour avec succès.');
 }
+
 
 
     // Logout
