@@ -42,7 +42,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [ProfilController::class, 'logout'])->name('logout');
 
     // Export / Import
-    Route::get('/export', [ProfilController::class, 'export'])->name('export');
+
+Route::get('/export', [ProfilController::class, 'export'])->name('export');
+Route::post('/export-excel', [ProfilController::class, 'exportExcel'])->name('export.excel');
     Route::get('/import', [ProfilController::class, 'import'])->name('import.form');
     Route::post('/import/preview', [ProfilController::class, 'preview'])->name('import.preview');
     Route::post('/import/store', [ProfilController::class, 'store'])->name('import.store');
@@ -50,7 +52,8 @@ Route::middleware('auth')->group(function () {
 
     // Diplômes (filtrage optionnel par promotion)
     Route::get('/diplome/{classe?}', [ProfilController::class, 'diplome'])->name('diplome');
-
+Route::patch('auditeur/{id}/toggle-status', [ProfilController::class, 'toggleStatusauditeur'])
+    ->name('auditeur.toggle-status');
     // Classes (AJAX)
     Route::get('/classes', [EtudiantController::class, 'index'])->name('classes.list');
 

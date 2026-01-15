@@ -12,6 +12,14 @@ use App\Models\Auditeur;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Cell\Hyperlink;
+use ZipArchive;
+use File;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 class ProfilController extends Controller
 {
     /* ================= AUDITEUR ================= */
@@ -176,33 +184,282 @@ public function update(Request $request)
     /* ================= ADMIN ================= */
 
     // Page principale diplômes
-   public function diplome(Request $request, $classe = null)
-    {
-        // Récupérer toutes les classes pour le filtre
-        $classes = Classe::orderBy('nom')->get();
+ public function diplome(Request $request, $classe = null)
+{
+    // Récupérer toutes les classes pour le filtre
+    $classes = Classe::orderBy('nom')->get();
 
-        // Récupérer les auditeurs avec leur classe
-        $query = Auditeur::with('classe');
+    // Récupérer les auditeurs avec leur classe
+    $query = Auditeur::with('classe');
 
-        // Filtrer par classe si spécifiée
-        if ($classe && $classe !== 'tous') {
-            $query->whereHas('classe', function($q) use ($classe) {
-                $q->where('nom', $classe);
-            });
-        }
-
-        $auditeurs = $query->orderBy('nom')->get();
-
-        // Compter le nombre total d'auditeurs affichés
-        $nombreAuditeurs = $auditeurs->count();
-
-        return view('Admin.pages.diplome', compact('auditeurs', 'classes', 'classe', 'nombreAuditeurs'));
+    // Filtrer par classe si spécifiée
+    if ($classe && $classe !== 'tous') {
+        $query->whereHas('classe', function($q) use ($classe) {
+            $q->where('nom', $classe);
+        });
     }
 
+    $auditeurs = $query->orderBy('nom')->get();
+
+    // Compter le nombre total d'auditeurs affichés
+    $nombreAuditeurs = $auditeurs->count();
+
+    return view('Admin.pages.diplome', compact('auditeurs', 'classes', 'classe', 'nombreAuditeurs'));
+}
+
+// Nouvelle méthode pour toggle le statut is_active
+public function toggleStatusauditeur($id)
+{
+    $auditeur = Auditeur::findOrFail($id);
+
+    // Inverser le statut
+    $auditeur->is_active = $auditeur->is_active == 1 ? 0 : 1;
+    $auditeur->save();
+
+    $message = $auditeur->is_active == 1 ? 'Auditeur validé avec succès !' : 'Auditeur mis en attente !';
+
+    return redirect()->back()->with('success', $message);
+}
+
     // Page export
-    public function export()
+     public function export(Request $request)
     {
-        return view('Admin.pages.export');
+        $classes = Classe::orderBy('nom')->get();
+        $auditeurs = collect();
+        $selectedClasse = null;
+
+        if ($request->has('classe_id') && $request->classe_id != '') {
+            $selectedClasse = Classe::find($request->classe_id);
+
+            $auditeurs = Auditeur::where('classe_id', $request->classe_id)
+                ->where('is_active', 1)
+                ->orderBy('nom')
+                ->orderBy('prenom')
+                ->get();
+        }
+
+        return view('Admin.pages.export', compact('classes', 'auditeurs', 'selectedClasse'));
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $request->validate([
+            'classe_id' => 'required|exists:classes,id'
+        ]);
+
+        $classe = Classe::findOrFail($request->classe_id);
+        $auditeurs = Auditeur::where('classe_id', $request->classe_id)
+            ->where('is_active', 1)
+            ->orderBy('nom')
+            ->orderBy('prenom')
+            ->get();
+
+        if ($auditeurs->isEmpty()) {
+            return redirect()->back()->with('error', 'Aucun auditeur validé dans cette classe.');
+        }
+
+        // Créer le dossier temporaire
+        $tempDir = storage_path('app/temp_export_' . time());
+        if (!File::exists($tempDir)) {
+            File::makeDirectory($tempDir, 0755, true);
+        }
+
+        // Créer le dossier photos
+        $photosDir = $tempDir . '/Photos_' . str_replace(' ', '_', $classe->nom);
+        if (!File::exists($photosDir)) {
+            File::makeDirectory($photosDir, 0755, true);
+        }
+
+        // Copier les photos
+        foreach ($auditeurs as $auditeur) {
+            if ($auditeur->photo) {
+                $sourcePath = storage_path('app/public/' . $auditeur->photo);
+                if (File::exists($sourcePath)) {
+                    $extension = pathinfo($sourcePath, PATHINFO_EXTENSION);
+                    $newFileName = $auditeur->auditeur_id . '.' . $extension;
+                    $destPath = $photosDir . '/' . $newFileName;
+                    File::copy($sourcePath, $destPath);
+                }
+            }
+        }
+
+        // Créer le fichier Excel
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Nom de la feuille
+        $sheet->setTitle($classe->nom);
+
+        // En-têtes (ligne 1)
+        $headers = [
+            'A1' => 'ID Auditeur',
+            'B1' => 'Nom et Prénom',
+            'C1' => 'Genre',
+            'D1' => 'Téléphone',
+            'E1' => 'Date de naissance',
+            'F1' => 'Lieu de naissance',
+            'G1' => 'Pays de résidence',
+            'H1' => 'Ville de résidence',
+            'I1' => 'Poste occupé',
+            'J1' => 'Employeur',
+            'K1' => 'Filière',
+            'L1' => 'Email',
+            'M1' => 'Photo'
+        ];
+
+        // Appliquer les en-têtes
+        foreach ($headers as $cell => $value) {
+            $sheet->setCellValue($cell, $value);
+        }
+
+        // Style des en-têtes
+        $headerStyle = [
+            'font' => [
+                'bold' => true,
+                'color' => ['rgb' => 'FFFFFF'],
+                'size' => 12
+            ],
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['rgb' => '4F46E5']
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['rgb' => '000000']
+                ]
+            ]
+        ];
+
+        $sheet->getStyle('A1:M1')->applyFromArray($headerStyle);
+
+        // Ajuster la hauteur de la ligne d'en-tête
+        $sheet->getRowDimension(1)->setRowHeight(25);
+
+        // Remplir les données
+        $row = 2;
+        $photosFolder = 'Photos_' . str_replace(' ', '_', $classe->nom);
+
+        foreach ($auditeurs as $auditeur) {
+            // ID Auditeur
+            $sheet->setCellValue('A' . $row, $auditeur->auditeur_id);
+
+            // Nom et Prénom
+            $sheet->setCellValue('B' . $row, strtoupper($auditeur->nom) . ' ' . ucwords($auditeur->prenom));
+
+            // Genre
+            $genre = strtoupper($auditeur->genre) == 'MASCULIN' || strtoupper($auditeur->genre) == 'M' ? 'M' : 'F';
+            $sheet->setCellValue('C' . $row, $genre);
+
+            // Téléphone
+            $sheet->setCellValue('D' . $row, $auditeur->telephone);
+
+            // Date de naissance
+            $sheet->setCellValue('E' . $row, $auditeur->date_naissance);
+
+            // Lieu de naissance
+            $sheet->setCellValue('F' . $row, $auditeur->lieu_naissance);
+
+            // Pays de résidence
+            $sheet->setCellValue('G' . $row, $auditeur->pays_residence);
+
+            // Ville de résidence
+            $sheet->setCellValue('H' . $row, $auditeur->ville_residence);
+
+            // Poste occupé
+            $sheet->setCellValue('I' . $row, $auditeur->poste_occupe);
+
+            // Employeur
+            $sheet->setCellValue('J' . $row, $auditeur->employeur);
+
+            // Filière
+            $sheet->setCellValue('K' . $row, $auditeur->filiere);
+
+            // Email
+            $sheet->setCellValue('L' . $row, $auditeur->mail_exact);
+
+            // Photo - Créer un lien hypertexte
+            if ($auditeur->photo) {
+                $extension = pathinfo($auditeur->photo, PATHINFO_EXTENSION);
+                $photoFileName = $auditeur->auditeur_id . '.' . $extension;
+                $photoPath = $photosFolder . '/' . $photoFileName;
+
+                $sheet->setCellValue('M' . $row, 'Voir photo');
+                $sheet->getCell('M' . $row)->getHyperlink()->setUrl($photoPath);
+
+                // Style du lien
+                $sheet->getStyle('M' . $row)->getFont()->setUnderline(true);
+                $sheet->getStyle('M' . $row)->getFont()->getColor()->setRGB('0000FF');
+            } else {
+                $sheet->setCellValue('M' . $row, 'Pas de photo');
+            }
+
+            // Style de la ligne
+            $sheet->getStyle('A' . $row . ':M' . $row)->applyFromArray([
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => Border::BORDER_THIN,
+                        'color' => ['rgb' => 'CCCCCC']
+                    ]
+                ],
+                'alignment' => [
+                    'vertical' => Alignment::VERTICAL_CENTER
+                ]
+            ]);
+
+            // Hauteur de ligne
+            $sheet->getRowDimension($row)->setRowHeight(20);
+
+            $row++;
+        }
+
+        // Ajuster la largeur des colonnes
+        $sheet->getColumnDimension('A')->setWidth(15);
+        $sheet->getColumnDimension('B')->setWidth(30);
+        $sheet->getColumnDimension('C')->setWidth(10);
+        $sheet->getColumnDimension('D')->setWidth(15);
+        $sheet->getColumnDimension('E')->setWidth(18);
+        $sheet->getColumnDimension('F')->setWidth(25);
+        $sheet->getColumnDimension('G')->setWidth(20);
+        $sheet->getColumnDimension('H')->setWidth(20);
+        $sheet->getColumnDimension('I')->setWidth(25);
+        $sheet->getColumnDimension('J')->setWidth(25);
+        $sheet->getColumnDimension('K')->setWidth(20);
+        $sheet->getColumnDimension('L')->setWidth(30);
+        $sheet->getColumnDimension('M')->setWidth(15);
+
+        // Sauvegarder le fichier Excel
+        $excelFileName = 'Liste_' . str_replace(' ', '_', $classe->nom) . '_' . date('Y-m-d') . '.xlsx';
+        $excelPath = $tempDir . '/' . $excelFileName;
+
+        $writer = new Xlsx($spreadsheet);
+        $writer->save($excelPath);
+
+        // Créer le fichier ZIP
+        $zipFileName = 'Export_' . str_replace(' ', '_', $classe->nom) . '_' . date('Y-m-d') . '.zip';
+        $zipPath = $tempDir . '/' . $zipFileName;
+
+        $zip = new ZipArchive();
+        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
+            // Ajouter le fichier Excel
+            $zip->addFile($excelPath, $excelFileName);
+
+            // Ajouter le dossier photos
+            $files = File::allFiles($photosDir);
+            foreach ($files as $file) {
+                $relativePath = $photosFolder . '/' . $file->getFilename();
+                $zip->addFile($file->getRealPath(), $relativePath);
+            }
+
+            $zip->close();
+        }
+
+        // Télécharger le ZIP
+        return response()->download($zipPath, $zipFileName)->deleteFileAfterSend(true);
     }
 
     // Page import
