@@ -85,16 +85,17 @@
                         <tr>
                             <th class="p-4 text-left">Photo</th>
                             <th class="p-4 text-left">ID</th>
-                            <th class="p-4 text-left">Nom et Prénom</th>
+                            <th class="p-4 text-left">Nom</th>
+                           <th class="p-4 text-left">Prénom</th>
                             <th class="p-4 text-center">Genre</th>
                             <th class="p-4 text-left">Téléphone</th>
                             <th class="p-4 text-left">Date de naissance</th>
-                            <th class="p-4 text-left">Lieu de naissance</th>
-                            <th class="p-4 text-left">Pays</th>
-                            <th class="p-4 text-left">Ville</th>
+                            <th class="p-4 text-left">Pays de naissance</th>
+                            <th class="p-4 text-left">Ville de naissance</th>
+                            <th class="p-4 text-left">Pays de résidence</th>
+                            <th class="p-4 text-left">Ville résidence</th>
                             <th class="p-4 text-left">Poste</th>
                             <th class="p-4 text-left">Employeur</th>
-                            <th class="p-4 text-left">Filière</th>
                             <th class="p-4 text-left">Email</th>
                         </tr>
                     </thead>
@@ -121,6 +122,8 @@
                                 <!-- Nom et Prénom -->
                                 <td class="p-4">
                                     <div class="font-semibold text-gray-800">{{ strtoupper($auditeur->nom) }}</div>
+                                </td>
+                                <td class="p-4">
                                     <div class="text-sm text-gray-600">{{ ucwords($auditeur->prenom) }}</div>
                                 </td>
 
@@ -138,6 +141,7 @@
 
                                 <!-- Date de naissance -->
                                 <td class="p-4 text-gray-700">{{ $auditeur->date_naissance ?? 'N/A' }}</td>
+                                <td class="p-4 text-gray-700">{{ $auditeur->Pays_naiss ?? 'N/A' }}</td>
 
                                 <!-- Lieu de naissance -->
                                 <td class="p-4 text-gray-700">{{ $auditeur->lieu_naissance ?? 'N/A' }}</td>
@@ -155,11 +159,7 @@
                                 <td class="p-4 text-gray-700">{{ $auditeur->employeur ?? 'N/A' }}</td>
 
                                 <!-- Filière -->
-                                <td class="p-4">
-                                    <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm">
-                                        {{ $auditeur->filiere ?? 'N/A' }}
-                                    </span>
-                                </td>
+                                
 
                                 <!-- Email -->
                                 <td class="p-4 text-gray-700 text-sm">{{ $auditeur->mail_exact ?? 'N/A' }}</td>

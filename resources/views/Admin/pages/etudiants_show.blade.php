@@ -107,8 +107,12 @@
                 </div>
 
                 <div>
-                    <p class="font-semibold text-gray-600">Lieu de naissance</p>
+                    <p class="font-semibold text-gray-600">Ville de naissance</p>
                     <p class="text-lg">{{ $auditeur->lieu_naissance ?? 'Non spécifié' }}</p>
+                </div>
+                <div>
+                    <p class="font-semibold text-gray-600">Pays de naissance</p>
+                    <p class="text-lg">{{ $auditeur->Pays_naiss ?? 'Non spécifié' }}</p>
                 </div>
             </div>
 
@@ -149,15 +153,9 @@
                     <p class="text-lg">{{ $auditeur->employeur ?? 'Non spécifié' }}</p>
                 </div>
 
-                <div>
-                    <p class="font-semibold text-gray-600">Filière</p>
-                    <p class="text-lg">{{ $auditeur->filiere ?? 'Non spécifié' }}</p>
-                </div>
+                
 
-                <div>
-                    <p class="font-semibold text-gray-600">Identifiant</p>
-                    <p class="text-lg">{{ $auditeur->identifiant ?? 'Non spécifié' }}</p>
-                </div>
+                
             </div>
 
             <div class="space-y-4">

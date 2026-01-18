@@ -175,6 +175,8 @@
                         <option value="Data" {{ old('filiere') == 'Data' ? 'selected' : '' }}>Data</option>
                         <option value="Finance" {{ old('filiere') == 'Finance' ? 'selected' : '' }}>Finance</option>
                         <option value="Logistique" {{ old('filiere') == 'Logistique' ? 'selected' : '' }}>Logistique</option>
+                        <option value="Complexite" {{ old('filiere') == 'Complexite' ? 'selected' : '' }}>Complexite</option>
+                        <option value="Psa" {{ old('filiere') == 'Psa' ? 'selected' : '' }}>Psa</option>
                     </select>
                     @error('filiere') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
@@ -220,6 +222,8 @@
                         <option value="Data">Data</option>
                         <option value="Finance">Finance</option>
                         <option value="Logistique">Logistique</option>
+                        <option value="Complexite">Complexite</option>
+                        <option value="Psa">Psa</option>
                     </select>
                 </div>
 

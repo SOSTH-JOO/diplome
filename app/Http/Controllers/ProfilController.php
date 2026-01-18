@@ -71,12 +71,12 @@ public function update(Request $request)
         'telephone' => 'required|string|max:25',
         'date_naissance' => 'required|date',
         'lieu_naissance' => 'required|string|max:255',
+        'pays_naiss' => 'required|string|max:255',
         'pays_residence' => 'required|string|max:255',
         'ville_residence' => 'required|string|max:255',
         'poste_occupe' => 'required|string|max:255',
         'employeur' => 'required|string|max:255',
-        'identifiant' => 'required|string|max:255',
-        'filiere' => 'required|string|max:255',
+    
         'mail_exact' => 'nullable|email|max:255',
         'photo' => 'nullable|image|max:2048', // max 2 Mo
     ]);
@@ -293,18 +293,19 @@ public function toggleStatusauditeur($id)
         // En-têtes (ligne 1)
         $headers = [
             'A1' => 'ID Auditeur',
-            'B1' => 'Nom et Prénom',
-            'C1' => 'Genre',
-            'D1' => 'Téléphone',
-            'E1' => 'Date de naissance',
-            'F1' => 'Lieu de naissance',
-            'G1' => 'Pays de résidence',
-            'H1' => 'Ville de résidence',
-            'I1' => 'Poste occupé',
-            'J1' => 'Employeur',
-            'K1' => 'Filière',
-            'L1' => 'Email',
-            'M1' => 'Photo'
+            'B1' => 'Nom',
+            'C1' => 'Prénom',
+            'D1' => 'Genre',
+            'E1' => 'Téléphone',
+            'F1' => 'Date de naissance',
+            'G1' => 'Pays de naissance',
+            'H1' => 'Ville de naissance',
+            'I1' => 'Pays de résidence',
+            'J1' => 'Ville de résidence',
+            'K1' => 'Poste occupé',
+            'L1' => 'Employeur',
+            'M1' => 'Email',
+            'N1' => 'Photo',
         ];
 
         // Appliquer les en-têtes
@@ -335,7 +336,7 @@ public function toggleStatusauditeur($id)
             ]
         ];
 
-        $sheet->getStyle('A1:M1')->applyFromArray($headerStyle);
+        $sheet->getStyle('A1:N1')->applyFromArray($headerStyle);
 
         // Ajuster la hauteur de la ligne d'en-tête
         $sheet->getRowDimension(1)->setRowHeight(25);
@@ -349,38 +350,38 @@ public function toggleStatusauditeur($id)
             $sheet->setCellValue('A' . $row, $auditeur->auditeur_id);
 
             // Nom et Prénom
-            $sheet->setCellValue('B' . $row, strtoupper($auditeur->nom) . ' ' . ucwords($auditeur->prenom));
-
+            $sheet->setCellValue('B' . $row, $auditeur->nom);
+            $sheet->setCellValue('C' . $row, $auditeur->prenom);
             // Genre
             $genre = strtoupper($auditeur->genre) == 'MASCULIN' || strtoupper($auditeur->genre) == 'M' ? 'M' : 'F';
-            $sheet->setCellValue('C' . $row, $genre);
+            $sheet->setCellValue('D' . $row, $genre);
 
             // Téléphone
-            $sheet->setCellValue('D' . $row, $auditeur->telephone);
+            $sheet->setCellValue('E' . $row, $auditeur->telephone);
 
             // Date de naissance
-            $sheet->setCellValue('E' . $row, $auditeur->date_naissance);
+            $sheet->setCellValue('F' . $row, $auditeur->date_naissance);
+            $sheet->setCellValue('G' . $row, $auditeur->Pays_naiss);
 
             // Lieu de naissance
-            $sheet->setCellValue('F' . $row, $auditeur->lieu_naissance);
+            $sheet->setCellValue('H' . $row, $auditeur->lieu_naissance);
 
             // Pays de résidence
-            $sheet->setCellValue('G' . $row, $auditeur->pays_residence);
+            $sheet->setCellValue('I' . $row, $auditeur->pays_residence);
 
             // Ville de résidence
-            $sheet->setCellValue('H' . $row, $auditeur->ville_residence);
+            $sheet->setCellValue('J' . $row, $auditeur->ville_residence);
 
             // Poste occupé
-            $sheet->setCellValue('I' . $row, $auditeur->poste_occupe);
+            $sheet->setCellValue('K' . $row, $auditeur->poste_occupe);
 
             // Employeur
-            $sheet->setCellValue('J' . $row, $auditeur->employeur);
+            $sheet->setCellValue('L' . $row, $auditeur->employeur);
 
             // Filière
-            $sheet->setCellValue('K' . $row, $auditeur->filiere);
 
             // Email
-            $sheet->setCellValue('L' . $row, $auditeur->mail_exact);
+            $sheet->setCellValue('M' . $row, $auditeur->mail_exact);
 
             // Photo - Créer un lien hypertexte
             if ($auditeur->photo) {
@@ -388,18 +389,18 @@ public function toggleStatusauditeur($id)
                 $photoFileName = $auditeur->auditeur_id . '.' . $extension;
                 $photoPath = $photosFolder . '/' . $photoFileName;
 
-                $sheet->setCellValue('M' . $row, 'Voir photo');
-                $sheet->getCell('M' . $row)->getHyperlink()->setUrl($photoPath);
+                $sheet->setCellValue('N' . $row, 'Voir photo');
+                $sheet->getCell('N' . $row)->getHyperlink()->setUrl($photoPath);
 
                 // Style du lien
-                $sheet->getStyle('M' . $row)->getFont()->setUnderline(true);
-                $sheet->getStyle('M' . $row)->getFont()->getColor()->setRGB('0000FF');
+                $sheet->getStyle('N' . $row)->getFont()->setUnderline(true);
+                $sheet->getStyle('N' . $row)->getFont()->getColor()->setRGB('0000FF');
             } else {
-                $sheet->setCellValue('M' . $row, 'Pas de photo');
+                $sheet->setCellValue('N' . $row, 'Pas de photo');
             }
 
             // Style de la ligne
-            $sheet->getStyle('A' . $row . ':M' . $row)->applyFromArray([
+            $sheet->getStyle('A' . $row . ':N' . $row)->applyFromArray([
                 'borders' => [
                     'allBorders' => [
                         'borderStyle' => Border::BORDER_THIN,
@@ -431,6 +432,7 @@ public function toggleStatusauditeur($id)
         $sheet->getColumnDimension('K')->setWidth(20);
         $sheet->getColumnDimension('L')->setWidth(30);
         $sheet->getColumnDimension('M')->setWidth(15);
+        $sheet->getColumnDimension('N')->setWidth(15);
 
         // Sauvegarder le fichier Excel
         $excelFileName = 'Liste_' . str_replace(' ', '_', $classe->nom) . '_' . date('Y-m-d') . '.xlsx';

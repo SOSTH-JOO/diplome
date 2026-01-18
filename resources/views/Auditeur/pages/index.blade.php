@@ -67,7 +67,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {{-- Champs non modifiables --}}
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Matricule</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Identifiant</label>
                             <input type="text" value="{{ $auditeur->auditeur_id }}"
                                    class="block w-full bg-gray-100 border-gray-300 rounded-md p-2 text-gray-600 cursor-not-allowed"
                                    disabled>
@@ -75,7 +75,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Email d'ajout</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                             <input type="email" value="{{ $auditeur->mail_ajout }}"
                                    class="block w-full bg-gray-100 border-gray-300 rounded-md p-2 text-gray-600 cursor-not-allowed"
                                    disabled>
@@ -83,7 +83,7 @@
 
                         {{-- Champs modifiables --}}
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nom *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nom de famille *</label>
                             <input type="text" name="nom" value="{{ old('nom', $auditeur->nom) }}"
                                    class="mt-1 block w-full border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500 @error('nom') border-red-500 @enderror"
                                    required>
@@ -93,7 +93,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Prénom *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Prénoms *</label>
                             <input type="text" name="prenom" value="{{ old('prenom', $auditeur->prenom) }}"
                                    class="mt-1 block w-full border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500 @error('prenom') border-red-500 @enderror"
                                    required>
@@ -143,7 +143,16 @@
                             @enderror
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Lieu de naissance *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Pays de naissance *</label>
+                            <input type="text" name="pays_naiss" value="{{ old('pays_naiss', $auditeur->lieu_naissance) }}"
+                                   class="mt-1 block w-full border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500 @error('pays_naiss') border-red-500 @enderror"
+                                   required>
+                            @error('pays_naiss')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Ville de naissance *</label>
                             <input type="text" name="lieu_naissance" value="{{ old('lieu_naissance', $auditeur->lieu_naissance) }}"
                                    class="mt-1 block w-full border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500 @error('lieu_naissance') border-red-500 @enderror"
                                    required>
@@ -199,23 +208,10 @@
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Filière *</label>
-                            <input type="text" name="filiere" value="{{ old('filiere', $auditeur->filiere) }}"
-                                   class="mt-1 block w-full border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500 @error('filiere') border-red-500 @enderror"
-                                   required>
-                            @error('filiere')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        
 
                         {{-- Champs non modifiable --}}
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Classe</label>
-                            <input type="text" value="{{ old('classe_id', $auditeur->classe?->nom ?? 'Non assigné') }}"
-                                   class="mt-1 block w-full bg-gray-100 border-gray-300 rounded-md p-2 text-gray-600 cursor-not-allowed"
-                                   disabled>
-                        </div>
+                        
                     </div>
                 </div>
 
@@ -233,15 +229,7 @@
                         </div>
 
                         {{-- Champ identifiant --}}
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Identifiant *</label>
-                            <input type="text" name="identifiant" value="{{ old('identifiant', $auditeur->identifiant) }}"
-                                   class="mt-1 block w-full border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500 @error('identifiant') border-red-500 @enderror"
-                                   required>
-                            @error('identifiant')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        
                     </div>
                 </div>
 

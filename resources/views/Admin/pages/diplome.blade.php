@@ -112,19 +112,16 @@
                     <th class="py-3 px-4 text-left font-semibold">Photo</th>
                     <th class="py-3 px-4 text-left font-semibold">ID</th>
                     <th class="py-3 px-4 text-left font-semibold">Nom </th>
-                                        <th class="py-3 px-4 text-left font-semibold">Prénom</th>
-
+                    <th class="py-3 px-4 text-left font-semibold">Prénom</th>
                     <th class="py-3 px-4 text-left font-semibold">Genre</th>
                     <th class="py-3 px-4 text-left font-semibold">Téléphone</th>
                     <th class="py-3 px-4 text-left font-semibold">Date de naissance</th>
-                    <th class="py-3 px-4 text-left font-semibold">Lieu de naissance</th>
+                    <th class="py-3 px-4 text-left font-semibold">Pays de naissance</th>
                     <th class="py-3 px-4 text-left font-semibold">Ville de résidence</th>
                     <th class="py-3 px-4 text-left font-semibold">Poste occupé</th>
                     <th class="py-3 px-4 text-left font-semibold">Employeur</th>
-                    <th class="py-3 px-4 text-left font-semibold">Identifiant</th>
-                    <th class="py-3 px-4 text-left font-semibold">Filière</th>
-                    <th class="py-3 px-4 text-left font-semibold">Email 1</th>
-                    <th class="py-3 px-4 text-left font-semibold">Email 2</th>
+                    <th class="py-3 px-4 text-left font-semibold">Email Ajout</th>
+                    <th class="py-3 px-4 text-left font-semibold">Email Exact</th>
                     <th class="py-3 px-4 text-left font-semibold">Classe</th>
                     <th class="py-3 px-4 text-center font-semibold">Statut</th>
                     <th class="py-3 px-4 text-center font-semibold">Actions</th>
@@ -175,9 +172,9 @@
                         {{ $auditeur->date_naissance ? $auditeur->date_naissance->format('d/m/Y') : 'N/A' }}
                     </td>
 
-                    <!-- Lieu de naissance -->
+                    <!-- Pays de naissance -->
                     <td class="py-3 px-4 text-gray-700">
-                        {{ $auditeur->lieu_naissance ?? 'N/A' }}
+                        {{ $auditeur->pays_naissance ?? 'N/A' }}
                     </td>
 
                     <!-- Ville de résidence -->
@@ -196,18 +193,14 @@
                     </td>
 
                     <!-- Identifiant -->
-                    <td class="py-3 px-4 text-gray-700 font-mono">
-                        {{ $auditeur->identifiant ?? 'N/A' }}
-                    </td>
+                    
 
                     <!-- Filière -->
-                    <td class="py-3 px-4 text-gray-700">
-                        {{ $auditeur->filiere ?? 'N/A' }}
-                    </td>
+                    
 
                     <!-- Email 1 -->
                     <td class="py-3 px-4 text-gray-800">
-                        {{ $auditeur->mail_ajout }}
+                        {{ $auditeur->mail_ajout ?? 'N/A' }}
                     </td>
 
                     <!-- Email 2 -->

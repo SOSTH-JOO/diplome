@@ -23,9 +23,10 @@ return new class extends Migration
 
             // Origine et naissance
             $table->date('date_naissance')->nullable();
+             $table->string('pays_naiss')->nullable();
             $table->string('lieu_naissance')->nullable();
             $table->string('password')->nullable();
-            $table->string('mail_ajout')->nullable();
+            $table->string('mail')->nullable();
             $table->string('mail_exact')->nullable();
 
             // Résidence actuelle
@@ -36,7 +37,6 @@ return new class extends Migration
             $table->string('poste_occupe')->nullable();
             $table->string('employeur')->nullable();
             $table->string('identifiant')->nullable();
-            $table->string('filiere')->nullable();
             $table->boolean('is_active')->default(true);
 
             // Photo de profil
