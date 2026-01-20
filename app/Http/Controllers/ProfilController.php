@@ -20,6 +20,9 @@ use PhpOffice\PhpSpreadsheet\Cell\Hyperlink;
 use ZipArchive;
 use File;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use App\Mail\AuditeurValide;
+use App\Mail\AuditeurRectification;
+use Illuminate\Support\Facades\Mail;
 class ProfilController extends Controller
 {
     /* ================= AUDITEUR ================= */
@@ -179,6 +182,164 @@ public function update(Request $request)
         $request->session()->regenerateToken();
         return redirect()->route('admin.login');
     }
+
+    /*============ENVOIE DE MAIL =============*/
+   public function activate(Request $request, $id)
+{
+    $auditeur = Auditeur::findOrFail($id);
+    $infoComplete = $request->input('info_complete'); // oui / non
+    $messagePersonnalise = $request->input('message');
+
+    // Activation du compte
+    $auditeur->is_active = true;
+    $auditeur->save();
+
+    try {
+
+        Mail::send([], [], function ($message) use ($auditeur, $messagePersonnalise, $infoComplete) {
+
+            /* =========================================================
+               EMAIL 1 : VALIDATION DU COMPTE (infos complètes)
+            ========================================================= */
+            if ($infoComplete === 'oui') {
+
+                $subject = 'Validation de votre compte auditeur';
+
+                $html = '
+                <body style="background-color:#f3f4f6;font-family:Arial,sans-serif;padding:20px;">
+                    <div style="max-width:600px;margin:auto;background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,0.1);">
+
+                        <div style="background:linear-gradient(90deg,#a855f7,#4f46e5);color:#ffffff;padding:30px;text-align:center;">
+                            <h1 style="margin:0;font-size:28px;">🎉 Félicitations !</h1>
+                        </div>
+
+                        <div style="padding:30px;">
+                            <h2 style="color:#1f2937;">
+                                Bonjour '.$auditeur->prenom.' '.$auditeur->nom.',
+                            </h2>
+
+                            <p style="color:#374151;">
+                                Votre compte auditeur a été validé avec succès.
+                            </p>
+
+                            <p><strong>Matricule :</strong> '.$auditeur->auditeur_id.'</p>
+                            <p><strong>Email :</strong> '.$auditeur->mail_exact.'</p>
+                            '.($auditeur->classe ? '<p><strong>Classe :</strong> '.$auditeur->classe->nom.'</p>' : '').'';
+
+                if ($messagePersonnalise) {
+                    $html .= '
+                            <div style="background:#eff6ff;border-left:4px solid #8b5cf6;padding:15px;margin:20px 0;">
+                                <strong>Message de l\'administrateur :</strong>
+                                <p>'.$messagePersonnalise.'</p>
+                            </div>';
+                }
+
+                $html .= '
+                            <div style="text-align:center;margin:30px 0;">
+                                <a href="'.config('app.url').'"
+                                   style="background:linear-gradient(90deg,#a855f7,#4f46e5);
+                                          color:#ffffff;
+                                          text-decoration:none;
+                                          padding:12px 25px;
+                                          border-radius:6px;
+                                          font-weight:bold;">
+                                    Accéder à mon compte
+                                </a>
+                            </div>
+
+                            <p>Cordialement,<br><strong>L\'équipe administrative</strong></p>
+                        </div>
+
+                        <div style="background:#f9fafb;padding:15px;text-align:center;font-size:12px;color:#6b7280;">
+                            © '.date('Y').' '.config('app.CITECH').'. Tous droits réservés.
+                        </div>
+                    </div>
+                </body>';
+            }
+
+            /* =========================================================
+               EMAIL 2 : ACTION REQUISE (infos incomplètes)
+            ========================================================= */
+            else {
+
+                $subject = 'Action requise – Informations à compléter';
+
+                $html = '
+                <body style="background-color:#f3f4f6;font-family:Arial,sans-serif;padding:20px;">
+                    <div style="max-width:600px;margin:auto;background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,0.1);">
+
+                        <div style="background:linear-gradient(90deg,#f472b6,#f87171);color:#ffffff;padding:30px;text-align:center;">
+                            <h1 style="margin:0;font-size:28px;">⚠️ Action requise</h1>
+                        </div>
+
+                        <div style="padding:30px;">
+                            <h2 style="color:#1f2937;">
+                                Bonjour '.$auditeur->prenom.' '.$auditeur->nom.',
+                            </h2>
+
+                            <div style="background:#fffbeb;border-left:4px solid #facc15;padding:15px;margin:20px 0;">
+                                <strong>Informations incomplètes</strong>
+                                <p>Certaines informations doivent être complétées.</p>
+                            </div>
+
+                            <p><strong>Matricule :</strong> '.$auditeur->auditeur_id.'</p>';
+
+                if ($messagePersonnalise) {
+                    $html .= '
+                            <div style="background:#eff6ff;border-left:4px solid #8b5cf6;padding:15px;margin:20px 0;">
+                                <strong>Message de l\'administrateur :</strong>
+                                <p>'.$messagePersonnalise.'</p>
+                            </div>';
+                }
+
+                $html .= '
+                            <ol style="color:#374151;padding-left:20px;">
+                                <li>Connectez-vous à votre compte</li>
+                                <li>Complétez vos informations</li>
+                                <li>Vérifiez vos données</li>
+                                <li>Soumettez votre profil</li>
+                            </ol>
+
+                            <div style="text-align:center;margin:30px 0;">
+                                <a href="'.config('app.url').'"
+                                   style="background:linear-gradient(90deg,#f472b6,#f87171);
+                                          color:#ffffff;
+                                          text-decoration:none;
+                                          padding:12px 25px;
+                                          border-radius:6px;
+                                          font-weight:bold;">
+                                    Compléter mon profil
+                                </a>
+                            </div>
+
+                            <p>Cordialement,<br><strong>L\'équipe administrative</strong></p>
+                        </div>
+
+                        <div style="background:#f9fafb;padding:15px;text-align:center;font-size:12px;color:#6b7280;">
+                            © '.date('Y').' '.config('app.CITECH').'. Tous droits réservés.
+                        </div>
+                    </div>
+                </body>';
+            }
+
+            $message->to($auditeur->mail_exact)
+                    ->subject($subject)
+                    ->html($html);
+        });
+
+        return redirect()->back()->with(
+            'success',
+            'Auditeur activé avec succès. Email envoyé.'
+        );
+
+    } catch (\Exception $e) {
+        return redirect()->back()->with(
+            'error',
+            'Auditeur activé mais email non envoyé : '.$e->getMessage()
+        );
+    }
+}
+
 
 
     /* ================= ADMIN ================= */
@@ -616,11 +777,7 @@ public function etudiants_show(Auditeur $auditeur)
     return view('Admin.pages.etudiants_show', compact('auditeur'));
 }
 
-public function activate(Auditeur $auditeur)
-{
-    $auditeur->update(['is_active' => true]);
-    return back()->with('success', 'Auditeur activé avec succès.');
-}
+
 
 public function reject(Auditeur $auditeur)
 {

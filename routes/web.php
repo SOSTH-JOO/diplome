@@ -64,6 +64,10 @@ Route::patch('auditeur/{id}/toggle-status', [ProfilController::class, 'toggleSta
     Route::put('/etudiants/{auditeur}/activate', [ProfilController::class, 'activate'])->name('etudiants.activate');
     Route::put('/etudiants/{auditeur}/reject', [ProfilController::class, 'reject'])->name('etudiants.reject');
     Route::delete('/etudiants/{auditeur}', [ProfilController::class, 'destroy'])->name('etudiants.destroy');
+   
+   
+   
+   
     // Gestion des utilisateurs
     Route::get('/utilisateurs', [ProfilController::class, 'indexuser'])->name('utilisateurs');
     Route::post('/utilisateurs', [ProfilController::class, 'storeuser'])->name('utilisateurs.store');
@@ -71,6 +75,7 @@ Route::patch('auditeur/{id}/toggle-status', [ProfilController::class, 'toggleSta
     Route::delete('/utilisateurs/{id}', [ProfilController::class, 'destroyuser'])->name('utilisateurs.destroy');
     Route::patch('/utilisateurs/{id}/toggle-status', [ProfilController::class, 'toggleStatus'])->name('utilisateurs.toggleStatus');
     Route::get('/utilisateurs/{id}', [ProfilController::class, 'show'])->name('utilisateurs.show');
+    
 
     // Profil
     Route::get('/Monprofil', [ProfilController::class, 'Monprofil'])->name('Monprofil');
@@ -80,6 +85,8 @@ Route::patch('auditeur/{id}/toggle-status', [ProfilController::class, 'toggleSta
     Route::post('/classes', [ProfilController::class, 'storeclasses'])->name('classes.store');
     Route::put('/classes/{classe}', [ProfilController::class, 'updateclasses'])->name('classes.update');
     Route::delete('/classes/{classe}', [ProfilController::class, 'destroyclasses'])->name('classes.destroy');
+
+    
 });
 
 
