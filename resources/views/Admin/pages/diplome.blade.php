@@ -124,20 +124,16 @@
 
                             <td class="py-3 px-4 text-gray-700">{{ $auditeur->classe->nom ?? 'N/A' }}</td>
                             <td class="py-3 px-4 text-center">
-                                @if($auditeur->statut == 'validé')
-                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold border border-green-300">
-                                    Validé
-                                </span>
-                                @elseif($auditeur->statut == 'rejeté')
-                                <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-xs font-semibold border border-red-300">
-                                    Rejeté
-                                </span>
-                                @else
-                                <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-semibold border border-yellow-300">
-                                    En attente
-                                </span>
-                                @endif
-                            </td>
+                                    @if($auditeur->is_active)
+                                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold border border-green-300">
+                                            Actif
+                                        </span>
+                                    @else
+                                        <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-semibold border border-yellow-300">
+                                            En attente
+                                        </span>
+                                    @endif
+                                </td>
                             <td class="py-3 px-4 text-center">
                                 <a href="{{ route('admin.etudiants.show', $auditeur->id) }}"
                                    class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition duration-200 shadow-md">

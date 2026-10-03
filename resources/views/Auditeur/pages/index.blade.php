@@ -110,7 +110,7 @@
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Matricule</label>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Identifiant</label>
                                 <input type="text" value="{{ $auditeur->auditeur_id }}" class="block w-full bg-white/50 border-2 border-gray-200 rounded-xl p-3 text-gray-600 cursor-not-allowed" disabled>
                                 <input type="hidden" name="auditeur_id" value="{{ $auditeur->auditeur_id }}">
                             </div>
@@ -122,13 +122,13 @@
 
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Nom <span class="text-red-500">*</span></label>
-                                <input type="text" name="nom" value="{{ old('nom', $auditeur->nom) }}" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all @error('nom') border-red-400 @enderror" required>
+                                <input type="text" name="nom" value="{{ old('nom', $auditeur->nom) }}" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all @error('nom') border-red-400 @enderror" required placeholder="en majuscule">
                                 @error('nom')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
                             </div>
 
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Prénom <span class="text-red-500">*</span></label>
-                                <input type="text" name="prenom" value="{{ old('prenom', $auditeur->prenom) }}" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all @error('prenom') border-red-400 @enderror" required>
+                                <input type="text" name="prenom" value="{{ old('prenom', $auditeur->prenom) }}" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all @error('prenom') border-red-400 @enderror" required placeholder="ex: Jean">
                                 @error('prenom')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
                             </div>
 
@@ -147,6 +147,19 @@
                                 <input type="text" name="telephone" value="{{ old('telephone', $auditeur->telephone) }}" placeholder="+225..." class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all @error('telephone') border-red-400 @enderror" required>
                                 @error('telephone')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
                             </div>
+                            
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Promotion <span class="text-red-500">*</span></label>
+                                <input type="text" name="promotion" value="{{ old('promotion', $auditeur->promotion) }}" placeholder="ex: 2023" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all @error('promotion') border-red-400 @enderror" required>
+                                @error('promotion')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Spécialité <span class="text-red-500">*</span></label>
+                                <input type="text" name="specialite" value="{{ old('specialite', $auditeur->specialite) }}" placeholder="ex: Finance" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all @error('specialite') border-red-400 @enderror" required>
+                                @error('specialite')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -170,7 +183,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Lieu de naissance <span class="text-red-500">*</span></label>
-                                <input type="text" name="lieu_naissance" value="{{ old('lieu_naissance', $auditeur->lieu_naissance) }}" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all @error('lieu_naissance') border-red-400 @enderror" required>
+                                <input type="text" name="lieu_naissance" value="{{ old('lieu_naissance', $auditeur->lieu_naissance) }}" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all @error('lieu_naissance') border-red-400 @enderror" required placeholder="ex: Abidjan">
                                 @error('lieu_naissance')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
                             </div>
                         </div>
@@ -188,12 +201,12 @@
                         <div class="space-y-6">
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Pays de résidence <span class="text-red-500">*</span></label>
-                                <input type="text" name="pays_residence" value="{{ old('pays_residence', $auditeur->pays_residence) }}" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-emerald-200 focus:border-emerald-500 transition-all @error('pays_residence') border-red-400 @enderror" required>
+                                <input type="text" name="pays_residence" value="{{ old('pays_residence', $auditeur->pays_residence) }}" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-emerald-200 focus:border-emerald-500 transition-all @error('pays_residence') border-red-400 @enderror" required placeholder="ex: Côte D'Ivoire">
                                 @error('pays_residence')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Ville de résidence <span class="text-red-500">*</span></label>
-                                <input type="text" name="ville_residence" value="{{ old('ville_residence', $auditeur->ville_residence) }}" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-emerald-200 focus:border-emerald-500 transition-all @error('ville_residence') border-red-400 @enderror" required>
+                                <input type="text" name="ville_residence" value="{{ old('ville_residence', $auditeur->ville_residence) }}" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-emerald-200 focus:border-emerald-500 transition-all @error('ville_residence') border-red-400 @enderror" required placeholder="ex: Abidjan">
                                 @error('ville_residence')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
                             </div>
                         </div>
@@ -213,17 +226,17 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Poste occupé <span class="text-red-500">*</span></label>
-                            <input type="text" name="poste_occupe" value="{{ old('poste_occupe', $auditeur->poste_occupe) }}" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-200 focus:border-amber-500 transition-all @error('poste_occupe') border-red-400 @enderror" required>
+                            <input type="text" name="poste_occupe" value="{{ old('poste_occupe', $auditeur->poste_occupe) }}" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-200 focus:border-amber-500 transition-all @error('poste_occupe') border-red-400 @enderror" required placeholder="ex: Informaticien">
                             @error('poste_occupe')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Employeur <span class="text-red-500">*</span></label>
-                            <input type="text" name="employeur" value="{{ old('employeur', $auditeur->employeur) }}" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-200 focus:border-amber-500 transition-all @error('employeur') border-red-400 @enderror" required>
+                            <input type="text" name="employeur" value="{{ old('employeur', $auditeur->employeur) }}" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-200 focus:border-amber-500 transition-all @error('employeur') border-red-400 @enderror" required placeholder="Nom d'entreprise">
                             @error('employeur')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Filière <span class="text-red-500">*</span></label>
-                            <input type="text" name="filiere" value="{{ old('filiere', $auditeur->filiere) }}" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-200 focus:border-amber-500 transition-all @error('filiere') border-red-400 @enderror" required>
+                            <input type="text" name="filiere" value="{{ old('filiere', $auditeur->filiere) }}" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-200 focus:border-amber-500 transition-all @error('filiere') border-red-400 @enderror" required placeholder="ex: DATA">
                             @error('filiere')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
                         </div>
                         <div>
@@ -246,12 +259,12 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Email exact</label>
-                            <input type="email" name="mail_exact" value="{{ old('mail_exact', $auditeur->mail_exact) }}" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-cyan-200 focus:border-cyan-500 transition-all @error('mail_exact') border-red-400 @enderror">
+                            <input type="email" name="mail_exact" value="{{ old('mail_exact', $auditeur->mail_exact) }}" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-cyan-200 focus:border-cyan-500 transition-all @error('mail_exact') border-red-400 @enderror" placeholder="example@gmail.com">
                             @error('mail_exact')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Identifiant <span class="text-red-500">*</span></label>
-                            <input type="text" name="identifiant" value="{{ old('identifiant', $auditeur->identifiant) }}" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-cyan-200 focus:border-cyan-500 transition-all @error('identifiant') border-red-400 @enderror" required>
+                            <input type="text" name="identifiant" value="{{ old('identifiant', $auditeur->identifiant) }}" class="block w-full border-2 border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-cyan-200 focus:border-cyan-500 transition-all @error('identifiant') border-red-400 @enderror" required placeholder="ex: ISMDA22UB001">
                             @error('identifiant')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
                         </div>
                     </div>
@@ -269,7 +282,7 @@
                     </div>
                     <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
                         <div class="flex-1">
-                            <input type="file" name="photo" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-rose-500 file:to-pink-600 file:text-white hover:file:from-rose-600 hover:file:to-pink-700 file:transition-all file:duration-300 file:shadow-lg hover:file:shadow-xl">
+                            <input type="file" name="photo" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-rose-500 file:to-pink-600 file:text-white hover:file:from-rose-600 hover:file:to-pink-700 file:transition-all file:duration-300 file:shadow-lg hover:file:shadow-xl" required>
                             @error('photo')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
                             <p class="text-xs text-gray-500 mt-3 flex items-center">
                                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -288,6 +301,49 @@
                             </div>
                         @endif
                     </div>
+                </div>
+
+                {{-- Pièce d'identité --}}
+                <div class="bg-gradient-to-br from-violet-50 to-purple-50 p-8 rounded-2xl border-2 border-violet-200 shadow-lg">
+                    <div class="flex items-center mb-6">
+                        <div class="bg-gradient-to-r from-violet-500 to-purple-600 p-3 rounded-xl mr-4 shadow-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">Pièce d'identité</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Recto <span class="text-red-500">*</span></label>
+                            <input type="file" name="piece_identite_recto" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-violet-500 file:to-purple-600 file:text-white hover:file:from-violet-600 hover:file:to-purple-700 file:transition-all file:duration-300 file:shadow-lg hover:file:shadow-xl" @if(!$auditeur->piece_identite_recto) required @endif>
+                            @error('piece_identite_recto')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
+                            @if($auditeur->piece_identite_recto)
+                                <div class="mt-3">
+                                    <p class="text-sm font-semibold text-gray-600 mb-2">Fichier actuel</p>
+                                    <img src="{{ asset('storage/' . $auditeur->piece_identite_recto) }}" alt="Recto pièce d'identité" class="w-full max-w-xs rounded-xl border-2 border-white shadow-lg">
+                                </div>
+                            @endif
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Verso <span class="text-red-500">*</span></label>
+                            <input type="file" name="piece_identite_verso" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-violet-500 file:to-purple-600 file:text-white hover:file:from-violet-600 hover:file:to-purple-700 file:transition-all file:duration-300 file:shadow-lg hover:file:shadow-xl" @if(!$auditeur->piece_identite_verso) required @endif>
+                            @error('piece_identite_verso')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
+                            @if($auditeur->piece_identite_verso)
+                                <div class="mt-3">
+                                    <p class="text-sm font-semibold text-gray-600 mb-2">Fichier actuel</p>
+                                    <img src="{{ asset('storage/' . $auditeur->piece_identite_verso) }}" alt="Verso pièce d'identité" class="w-full max-w-xs rounded-xl border-2 border-white shadow-lg">
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-4 flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                        </svg>
+                        Taille maximale : 2 Mo par fichier. Formats acceptés : JPG, PNG
+                    </p>
                 </div>
 
                 {{-- Bouton --}}

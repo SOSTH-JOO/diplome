@@ -70,7 +70,11 @@ public function update(Request $request)
         'identifiant' => 'required|string|max:255',
         'filiere' => 'required|string|max:255',
         'mail_exact' => 'nullable|email|max:255',
-        'photo' => 'nullable|image|max:2048', // max 2 Mo
+        'photo' => 'nullable|image|max:2048',
+        'promotion'  => 'required|string|max:255',
+        'specialite' => 'required|string|max:255',
+        'piece_identite_recto' => 'nullable|image|max:2048',
+        'piece_identite_verso' => 'nullable|image|max:2048',
     ]);
 
     $data['is_open'] = 1;
@@ -97,6 +101,42 @@ public function update(Request $request)
 
         // Stocker le fichier dans le dossier spécifique
         $path = $file->storeAs($directory, $filename, 'public');
+
+         // Recto
+    if ($request->hasFile('piece_identite_recto')) {
+        if ($auditeur->piece_identite_recto && Storage::disk('public')->exists($auditeur->piece_identite_recto)) {
+            Storage::disk('public')->delete($auditeur->piece_identite_recto);
+        }
+
+        $file = $request->file('piece_identite_recto');
+        $classeName = $auditeur->classe?->nom ?? 'sans_classe';
+        $directory = 'auditeurs/' . $classeName . '/pieces_identite';
+
+        if (!Storage::disk('public')->exists($directory)) {
+            Storage::disk('public')->makeDirectory($directory);
+        }
+
+        $filename = $auditeur->auditeur_id . '_recto_' . time() . '.' . $file->getClientOriginalExtension();
+        $data['piece_identite_recto'] = $file->storeAs($directory, $filename, 'public');
+    }
+
+    // Verso
+    if ($request->hasFile('piece_identite_verso')) {
+        if ($auditeur->piece_identite_verso && Storage::disk('public')->exists($auditeur->piece_identite_verso)) {
+            Storage::disk('public')->delete($auditeur->piece_identite_verso);
+        }
+
+        $file = $request->file('piece_identite_verso');
+        $classeName = $auditeur->classe?->nom ?? 'sans_classe';
+        $directory = 'auditeurs/' . $classeName . '/pieces_identite';
+
+        if (!Storage::disk('public')->exists($directory)) {
+            Storage::disk('public')->makeDirectory($directory);
+        }
+
+        $filename = $auditeur->auditeur_id . '_verso_' . time() . '.' . $file->getClientOriginalExtension();
+        $data['piece_identite_verso'] = $file->storeAs($directory, $filename, 'public');
+    }
 
         // Sauvegarder le chemin dans les données
         $data['photo'] = $path;

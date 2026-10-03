@@ -155,6 +155,16 @@
                 </div>
 
                 <div>
+                    <p class="font-semibold text-gray-600">Promotion</p>
+                    <p class="text-lg">{{ $auditeur->promotion ?? 'Non spécifié' }}</p>
+                </div>
+
+                <div>
+                    <p class="font-semibold text-gray-600">Spécialité</p>
+                    <p class="text-lg">{{ $auditeur->specialite ?? 'Non spécifié' }}</p>
+                </div>
+
+                <div>
                     <p class="font-semibold text-gray-600">Identifiant</p>
                     <p class="text-lg">{{ $auditeur->identifiant ?? 'Non spécifié' }}</p>
                 </div>
@@ -192,6 +202,34 @@
                 </div>
             </div>
         </div>
+
+        {{-- Pièce d'identité --}}
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Pièce d'identité</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            <p class="font-semibold text-gray-600 mb-2">Recto</p>
+            @if($auditeur->piece_identite_recto)
+                <a href="{{ asset('storage/' . $auditeur->piece_identite_recto) }}" target="_blank">
+                    <img src="{{ asset('storage/' . $auditeur->piece_identite_recto) }}" alt="Recto pièce d'identité" class="w-full max-w-xs rounded-lg border-2 border-gray-200 shadow hover:shadow-lg transition">
+                </a>
+            @else
+                <p class="text-gray-400 italic">Non fourni</p>
+            @endif
+        </div>
+
+        <div>
+            <p class="font-semibold text-gray-600 mb-2">Verso</p>
+            @if($auditeur->piece_identite_verso)
+                <a href="{{ asset('storage/' . $auditeur->piece_identite_verso) }}" target="_blank">
+                    <img src="{{ asset('storage/' . $auditeur->piece_identite_verso) }}" alt="Verso pièce d'identité" class="w-full max-w-xs rounded-lg border-2 border-gray-200 shadow hover:shadow-lg transition">
+                </a>
+            @else
+                <p class="text-gray-400 italic">Non fourni</p>
+            @endif
+        </div>
+    </div>
+</div>
 
         {{-- Boutons d'action --}}
         <div class="mt-10 pt-6 border-t border-gray-200">

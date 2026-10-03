@@ -10,26 +10,31 @@ class Auditeur extends Authenticatable
     use HasFactory;
 
     protected $fillable = [
-        'auditeur_id',
-        'nom',
-        'prenom',
-        'genre',
-        'telephone',
-        'date_naissance',
-        'lieu_naissance',
-        'pays_residence',
-        'ville_residence',
-        'poste_occupe',
-        'employeur',
-        'identifiant',
-        'filiere',
-        'photo',
-        'password',
-        'classe_id',
-        'mail_ajout',
-        'mail_exact',
-        'is_active',
-    ];
+    'auditeur_id',
+    'nom',
+    'prenom',
+    'genre',
+    'telephone',
+    'date_naissance',
+    'lieu_naissance',
+    'pays_residence',
+    'ville_residence',
+    'poste_occupe',
+    'employeur',
+    'identifiant',
+    'filiere',
+    'photo',
+    'password',
+    'classe_id',
+    'mail_ajout',
+    'mail_exact',
+    'is_active',
+    'is_open',
+    'promotion',
+    'specialite',
+    'piece_identite_recto',
+    'piece_identite_verso',
+];
 
     protected $hidden = [
         'password',
@@ -51,3 +56,4 @@ class Auditeur extends Authenticatable
         return $this->belongsTo(Classe::class, 'classe_id');
     }
 }
+

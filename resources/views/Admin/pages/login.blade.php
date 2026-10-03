@@ -12,7 +12,7 @@
 
     <div class="w-full max-w-md relative z-10">
         <!-- Card with glassmorphism effect -->
-        <div class="bg-white bg-opacity-95 backdrop-blur-lg rounded-3xl shadow-2xl p-8 transition-all duration-500 hover:scale-105">
+        <div class="bg-white bg-opacity-95 backdrop-blur-lg rounded-3xl shadow-2xl p-2 transition-all duration-500 hover:scale-105">
             <!-- Logo or icon -->
             <div class="flex justify-center mb-6">
                 <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg transform rotate-3 hover:rotate-6 transition-transform duration-300">
